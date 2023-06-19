@@ -1,23 +1,42 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Loader from './Loader/Loader';
+import Tab from './Tab/Tab';
+import data from './Weather.json';
+import WeatherDetail from './WeatherDetail/WeatherDetail';
 
 function App() {
+
+  const [input, setInput] = useState('');
+
+  const [selectedTab, setSelectedTab] = useState(0);
+
+  const handleTabSelection = (id) => {
+    setSelectedTab(id);
+  }
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="app-header">
+        Weather Forecast
+      </div>
+      <div className="textinput-container">
+        <input type="text" className="textinput" placeholder='Enter the City Name' value={input} onChange={(e) => setInput(e.target.value)} />
+      </div>
+      <button type="button" className="submit-city">Get Forecast</button>
+
+      <div className="tabs-container">
+        {data?.list?.map((weatherInfo, index) => {
+          return <Tab key={index} id={index} selectedTab={selectedTab} handleTabSelection={handleTabSelection} weatherInfo={weatherInfo}/>
+        })}
+      </div> 
+
+      {/* <div className="loader-container"><Loader/></div> */}
+
+     
+      <div className="weather-details-container">
+        <WeatherDetail weatherDetail={data?.list?.[selectedTab]} cityname={data?.city?.name}/>
+      </div>
     </div>
   );
 }
