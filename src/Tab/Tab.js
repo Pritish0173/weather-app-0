@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const Tab = ({id, selectedTab, handleTabSelection, weatherInfo}) => {
 
     const [isActiveTab, setIsActiveTab] = useState(false);
 
-    const handleTab = () => {
-        handleTabSelection(id);
-    }
+    const tabLabel = useMemo(() => {
+        switch (id) {
+            case 0:
+                return 'Today';
+            case 1:
+                return 'Tommorow';
+            case 2:
+                return 'Day After Tommorow';
+            default:
+                return weatherInfo?.dt_txt;
+        }
+    }, [id])
 
     useEffect(() => {
         if(selectedTab===id){
@@ -16,11 +25,16 @@ const Tab = ({id, selectedTab, handleTabSelection, weatherInfo}) => {
             setIsActiveTab(false);
         }
     }, [selectedTab]);
+
+    
+    const handleTab = () => {
+        handleTabSelection(id);
+    }
     
 
   return (
     <div className={`tab ${isActiveTab ? 'active-tab' : ''}`} onClick={handleTab}>
-        {weatherInfo?.dt_txt}
+        {tabLabel}
     </div>
   )
 }
