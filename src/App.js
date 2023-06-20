@@ -19,6 +19,7 @@ function App() {
   };
 
   const handleGetForecast = () => {
+    setWeatherData(null);
     setLoading(true);
     setTimeout(() => {
       setWeatherData(data);
