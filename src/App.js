@@ -24,7 +24,7 @@ function App() {
 
     axios
       .get(
-        `/api/retrieve-forecast?city=${input}&count=3`
+        `http://aa6d8698c32134bc39d15e7dabd27f05-1066716756.us-east-2.elb.amazonaws.com:8083/myweatherapp/weatherforecastprovider/retrieve-forecast?city=${input}&count=3`
       )
       .then((response) => {
         setWeatherData(response.data);
