@@ -42,7 +42,7 @@
 .weather-details-container{
   width: 35%;
   /* width: fit-content; */
-  background-color: white;
+  background-color: rgb(205, 205, 255);
   /* height: 100px; */
   border-radius: 10px;
   margin: auto;
@@ -95,7 +95,7 @@
 .weatherdetail-cityname {
   font-size: 50px;
   padding-left: 10px;
-  color: rgb(76, 182, 248);
+  color: rgb(31, 145, 215);
 }
 
 .weatherdetail-weather {

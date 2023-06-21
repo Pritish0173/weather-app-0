@@ -2,8 +2,8 @@ import { useState } from "react";
 import "./App.css";
 import Loader from "./Loader/Loader";
 import Tab from "./Tab/Tab";
-import data from "./Weather.json";
 import WeatherDetail from "./WeatherDetail/WeatherDetail";
+import axios from "axios";
 
 function App() {
   const [input, setInput] = useState("");
@@ -21,10 +21,19 @@ function App() {
   const handleGetForecast = () => {
     setWeatherData(null);
     setLoading(true);
-    setTimeout(() => {
-      setWeatherData(data);
-      setLoading(false);
-    }, 2000);
+
+    axios
+      .get(
+        `http://aa6d8698c32134bc39d15e7dabd27f05-1066716756.us-east-2.elb.amazonaws.com:8083/myweatherapp/weatherforecastprovider/retrieve-forecast?city=${input}&count=3`
+      )
+      .then((response) => {
+        setWeatherData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
   };
 
   return (
@@ -49,32 +58,36 @@ function App() {
         </div>
       )}
 
-      {/* <div className="loader-container"><Loader/></div> */}
-
       {weatherData && (
         <>
-          <div className="weatherdetail-weathertext">
-            {weatherData?.apiResponse?.weatherCondition}
-          </div>
-          <div className="tabs-container">
-            {weatherData?.apiResponse?.list?.map((weatherInfo, index) => {
-              return (
-                <Tab
-                  key={index}
-                  id={index}
-                  selectedTab={selectedTab}
-                  handleTabSelection={handleTabSelection}
-                  weatherInfo={weatherInfo}
+          {weatherData?.errocode === "01" ? (
+            <div className="weatherdetail-weathertext">Forecast not found</div>
+          ) : (
+            <>
+              <div className="weatherdetail-weathertext">
+                {weatherData?.apiResponse?.weatherCondition}
+              </div>
+              <div className="tabs-container">
+                {weatherData?.apiResponse?.list?.slice(0,3).map((weatherInfo, index) => {
+                  return (
+                    <Tab
+                      key={index}
+                      id={index}
+                      selectedTab={selectedTab}
+                      handleTabSelection={handleTabSelection}
+                      weatherInfo={weatherInfo}
+                    />
+                  );
+                })}
+              </div>
+              <div className="weather-details-container">
+                <WeatherDetail
+                  weatherDetail={weatherData?.apiResponse?.list?.[selectedTab]}
+                  cityname={weatherData?.apiResponse?.city?.name}
                 />
-              );
-            })}
-          </div>
-          <div className="weather-details-container">
-            <WeatherDetail
-              weatherDetail={weatherData?.apiResponse?.list?.[selectedTab]}
-              cityname={weatherData?.apiResponse?.city?.name}
-            />
-          </div>
+              </div>
+            </>
+          )}
         </>
       )}
     </div>
